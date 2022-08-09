@@ -165,6 +165,7 @@ public class ManagerTest {
     @Test
     @DisplayName("test8")
     public void test8() throws Exception{
+
         Students john = new Students();
         john.setId(1);
         john.setFirstName("John");
@@ -189,6 +190,25 @@ public class ManagerTest {
     @Test
     @DisplayName("test9")
     public void test9() throws Exception {
+        Students max = new Students();
+        max.setId(3);
+        max.setFirstName("Max");
+        max.setLastName("Handson");
+
+        Students nia = new Students();
+        nia.setId(4);
+        nia.setFirstName("Nia");
+        nia.setLastName("Nelson");
+
+        manager.save(max);
+        manager.save(nia);
+
+        var updateForMax = manager.update(max);
+        var updateForNia = manager.update(nia);
+
+        assertEquals("Handson",updateForMax.getLastName());
+        assertEquals("Nelson",updateForNia.getLastName());
+
 
     }
 

@@ -18,7 +18,8 @@ public class Students {
     private String lastName;
 
     @OneToMany(mappedBy = "students")
-    private List<Laptops> laptopsList = new ArrayList<>() {};
+    private List<Laptops> laptopsList = new ArrayList<>() {
+    };
 
     public int getId() {
         return id;

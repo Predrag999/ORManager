@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 public class Teachers {
     @Id
     @Column(name = "id")
-   @JoinColumn
+    @JoinColumn
     private int id;
     @Column(name = "teacherFirstName")
     private String teacherFirstName;

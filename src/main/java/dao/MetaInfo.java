@@ -2,15 +2,9 @@ package dao;
 
 import annotations.*;
 import connection.ConnectionFactory;
-import org.hibernate.mapping.Join;
-
-import javax.json.Json;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.*;
 
 public class MetaInfo<T> {
@@ -29,16 +23,9 @@ public class MetaInfo<T> {
     Class<T> cls;
     String tableName;
     PrimaryKey primaryKey;
-
-    //    ForeignKey foreignKey;
     List<ColumnInfo> columns = new ArrayList<>();
     Connection connection;
     ConnectionFactory connectionFactory;
-
-//    List<ColumnInfo> separateColumns = new ArrayList<>();
-
-//    ColumnInfo instance;
-
 
     static class PrimaryKey extends ColumnInfo {
 
@@ -76,6 +63,7 @@ public class MetaInfo<T> {
     public MetaInfo(Class<T> cls) {
         this.cls = cls;
         init();
+//        init1();
     }
 
     public MetaInfo() {
@@ -89,8 +77,11 @@ public class MetaInfo<T> {
         setTableName();
         setPrimaryKey();
         setColumns();
-        setColumnsForNewTable();
+//        setColumnsForNewTable();
     }
+//    private void init1(){
+//        setColumnsForNewTable();
+//    }
 
 
     public void setColumns() {
@@ -99,21 +90,6 @@ public class MetaInfo<T> {
                 columns.add(new ColumnInfo(field, field.getName()));
             }
         }
-//        setForeignKeyRelation(cls);
-//        var foreignKey = addForeignKey(cls);
-//        try {
-//            connectionFactory = new ConnectionFactory();
-//            try {
-//                connection = connectionFactory.connect();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            PreparedStatement preparedStatement = connection.prepareStatement(foreignKey);
-//            preparedStatement.executeUpdate();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
     public void setColumnsForNewTable(){
         setForeignKeyRelation(cls);
@@ -203,9 +179,10 @@ public class MetaInfo<T> {
                 sb.append("\n");
                 sb.append("ADD CONSTRAINT " + fk);
                 sb.append("\n");
-                sb.append("FOREIGN KEY " + field.getName() + " REFERENCES " + "students" + "(" + field.getName() + ");");
+                sb.append("FOREIGN KEY " + "student_Id" + " REFERENCES " + "students" + "(" + "student_Id" + ");");
                 System.out.println(primaryKey);
                 System.out.println("Success");
+                columns.add(new ColumnInfo(field,field.getName()));
             }
         }
         return sb.toString();

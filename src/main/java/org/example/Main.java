@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Main {
 
-    public static void chill(final List<?> aListWithSomeType){
+    public static void chill(final List<?> aListWithSomeType) {
         System.out.println(aListWithSomeType.getClass().getGenericSuperclass());
         System.out.println(((ParameterizedType) aListWithSomeType.getClass()
                 .getGenericSuperclass()).getActualTypeArguments()[0]);
@@ -43,13 +43,13 @@ public class Main {
 //        students.setLastName("Anderson");
 
         // !!!!!!!!!!!!!!!!!!!!!!
-        manager.register(Students.class);
+        manager.register(Students.class,Laptops.class);
         Students max = new Students();
         max.setId(1);
         max.setFirstName("Max");
         max.setLastName("Henderson");
 //
-        manager.register(Laptops.class);
+//        manager.register(Laptops.class);
         Laptops acer = new Laptops();
         acer.setId(1);
         acer.setLaptopName("Acer");
@@ -134,7 +134,6 @@ public class Main {
 //        System.out.println("-----------------");
 //        MetaInfo metaInfo1 = new MetaInfo(Students.class);
 //        metaInfo1.setColumns();
-
 
 
 //        Subjects newSubject = new Subjects();
@@ -410,6 +409,7 @@ public class Main {
 
     }
 }
+
 class SpiderMan {
 
 }

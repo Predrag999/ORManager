@@ -34,7 +34,8 @@ public class Subjects {
         this.id = id;
         this.subjectName = subjectName;
     }
-    public Subjects(){
+
+    public Subjects() {
 
     }
 
