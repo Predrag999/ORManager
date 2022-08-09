@@ -410,6 +410,3 @@ public class Main {
     }
 }
 
-class SpiderMan {
-
-}

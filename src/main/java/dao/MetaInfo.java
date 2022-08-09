@@ -77,11 +77,7 @@ public class MetaInfo<T> {
         setTableName();
         setPrimaryKey();
         setColumns();
-//        setColumnsForNewTable();
     }
-//    private void init1(){
-//        setColumnsForNewTable();
-//    }
 
 
     public void setColumns() {
@@ -119,14 +115,6 @@ public class MetaInfo<T> {
                 for (Field field1 : name.getDeclaredFields()) {
                     if (field1.isAnnotationPresent(OneToMany.class)) {
                         System.out.println("In this for circle");
-                        if (field.isAnnotationPresent(Id.class)) {
-                            var res = new PrimaryKey();
-                                res.field = field;
-                                res.columnName = field.getName();
-                                this.primaryKey = res;
-                                columns.add(new ColumnInfo(field,field.getName()));
-                                break;
-                        }
                     }
                 }
             }
@@ -170,19 +158,21 @@ public class MetaInfo<T> {
 
     public String addForeignKey(Class<T> clz) {
         String laptops = "laptops";
-        String fk = "FK_StudentLaptops";
-        String pk = "studentId";
+        String fk = "FK_StudentId";
         StringBuilder sb = new StringBuilder();
         for(Field field : clz.getDeclaredFields()) {
             if(field.isAnnotationPresent(JoinColumn.class)) {
-                sb.append("ALTER TABLE " + laptops);
-                sb.append("\n");
-                sb.append("ADD CONSTRAINT " + fk);
-                sb.append("\n");
-                sb.append("FOREIGN KEY " + "student_Id" + " REFERENCES " + "students" + "(" + "student_Id" + ");");
-                System.out.println(primaryKey);
-                System.out.println("Success");
-                columns.add(new ColumnInfo(field,field.getName()));
+                if(field.isAnnotationPresent(Id.class)) {
+                    sb.append("ALTER TABLE " + laptops);
+                    sb.append("\n");
+                    sb.append("ADD CONSTRAINT " + fk);
+                    sb.append("\n");
+                    sb.append("FOREIGN KEY " + field.getName() + " REFERENCES " + "students" + "(" + field.getName() + ");");
+                    System.out.println(primaryKey);
+                    System.out.println("Success");
+                    columns.add(new ColumnInfo(field, field.getName()));
+                    columns.forEach(e -> System.out.print(e + " "));
+                }
             }
         }
         return sb.toString();

@@ -10,8 +10,8 @@ import java.util.List;
 @Table("students")
 public class Students {
     @Id
-    @Column(name = "student_Id")
-    private int id;
+    @Column(name = "studentId")
+    private int studentId;
     @Column(name = "firstName")
     private String firstName;
     @Column(name = "lastName")
@@ -22,11 +22,11 @@ public class Students {
     };
 
     public int getId() {
-        return id;
+        return studentId;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this.studentId = id;
     }
 
 

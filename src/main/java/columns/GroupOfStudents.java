@@ -4,7 +4,7 @@ import annotations.Column;
 import annotations.Entity;
 import annotations.Id;
 
-import javax.persistence.ManyToMany;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +19,10 @@ public class GroupOfStudents {
     @Column
     private String groupName;
 
-    @ManyToMany
+//    @ManyToMany
     @Column
     private List<Students> group = new ArrayList<>();
-    @ManyToMany
+//    @ManyToMany
     @Column
     private List<Subjects> subjects = new ArrayList<>();
 

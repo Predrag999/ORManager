@@ -1,7 +1,5 @@
 package annotations;
 
-import javax.persistence.Index;
-import javax.persistence.UniqueConstraint;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

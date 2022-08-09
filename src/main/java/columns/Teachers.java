@@ -2,7 +2,6 @@ package columns;
 
 import annotations.*;
 
-import javax.persistence.JoinColumn;
 
 @Entity
 @Table("teachers")
