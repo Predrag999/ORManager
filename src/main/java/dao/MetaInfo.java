@@ -1,13 +1,17 @@
 package dao;
 
 import annotations.*;
+import connection.ConnectionFactory;
+import org.hibernate.mapping.Join;
 
+import javax.json.Json;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Type;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.util.*;
 
 public class MetaInfo<T> {
     private static final Map<Class<?>, String> JavaTypeToSqlType = Map.of(
@@ -23,22 +27,24 @@ public class MetaInfo<T> {
     private static final Map<Class<?>, MetaInfo> cache = new HashMap<>();
 
     Class<T> cls;
-     String tableName;
+    String tableName;
     PrimaryKey primaryKey;
 
-    ForeignKey foreignKey;
-     List<ColumnInfo> columns = new ArrayList<>();
+    //    ForeignKey foreignKey;
+    List<ColumnInfo> columns = new ArrayList<>();
+    Connection connection;
+    ConnectionFactory connectionFactory;
 
-     ColumnInfo instance;
+//    List<ColumnInfo> separateColumns = new ArrayList<>();
 
-     static class ForeignKey extends ColumnInfo{
+//    ColumnInfo instance;
 
-     }
+
     static class PrimaryKey extends ColumnInfo {
 
     }
 
-     static class ColumnInfo {
+    static class ColumnInfo {
         Field field;
         String columnName;
 
@@ -83,35 +89,73 @@ public class MetaInfo<T> {
         setTableName();
         setPrimaryKey();
         setColumns();
+        setColumnsForNewTable();
     }
 
 
-//
-
-public void setColumns() {
-    for (Field field : cls.getDeclaredFields()) {
-        if (field.isAnnotationPresent(Column.class) && !field.isAnnotationPresent(Id.class)) {
-            columns.add(new ColumnInfo(field, field.getName()));
+    public void setColumns() {
+        for (Field field : cls.getDeclaredFields()) {
+            if (field.isAnnotationPresent(Column.class) && !field.isAnnotationPresent(Id.class)) {
+                columns.add(new ColumnInfo(field, field.getName()));
+            }
         }
-        if(field.isAnnotationPresent(ManyToOne.class)){
-            Class<T> persistentClass = (Class<T>)
-                    ((ParameterizedType)getClass().getGenericSuperclass())
-                            .getActualTypeArguments()[0];
-            System.out.println(persistentClass.getName());
-            if(persistentClass.isAnnotationPresent(OneToMany.class)){
-//                for (var fields : persistentClass.getDeclaredFields()) {
-                    System.out.println(persistentClass.getName());
-//                    if (fields.isAnnotationPresent(Id.class)) {
-//                        var res = new PrimaryKey();
-//                        res.field = fields;
-//                        res.columnName = fields.getName();
-//                        this.primaryKey = res;
-//                    }
-//                }
+//        setForeignKeyRelation(cls);
+//        var foreignKey = addForeignKey(cls);
+//        try {
+//            connectionFactory = new ConnectionFactory();
+//            try {
+//                connection = connectionFactory.connect();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            PreparedStatement preparedStatement = connection.prepareStatement(foreignKey);
+//            preparedStatement.executeUpdate();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+    }
+    public void setColumnsForNewTable(){
+        setForeignKeyRelation(cls);
+        var foreignKey = addForeignKey(cls);
+        try {
+            connectionFactory = new ConnectionFactory();
+            try {
+                connection = connectionFactory.connect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PreparedStatement preparedStatement = connection.prepareStatement(foreignKey);
+            preparedStatement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setForeignKeyRelation(Class cls) {
+        for (Field field : cls.getDeclaredFields()) {
+            if (field.isAnnotationPresent(ManyToOne.class)) {
+
+                Class<T> name = (Class<T>) field.getType();
+                System.out.println(name);
+
+                for (Field field1 : name.getDeclaredFields()) {
+                    if (field1.isAnnotationPresent(OneToMany.class)) {
+                        System.out.println("In this for circle");
+                        if (field.isAnnotationPresent(Id.class)) {
+                            var res = new PrimaryKey();
+                                res.field = field;
+                                res.columnName = field.getName();
+                                this.primaryKey = res;
+                                columns.add(new ColumnInfo(field,field.getName()));
+                                break;
+                        }
+                    }
+                }
             }
         }
     }
-}
 
     private void setPrimaryKey() {
         for (var field : cls.getDeclaredFields()) {
@@ -137,7 +181,7 @@ public void setColumns() {
     public String createTableSql() {
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE ").append(tableName).append(" (");
-        sb.append(columnDefinition(primaryKey)).append(" NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY");
+        sb.append(columnDefinition(primaryKey)).append(" NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY ");
         for (var column : columns) {
             sb.append(", \n");
             sb.append(columnDefinition(column));
@@ -145,16 +189,25 @@ public void setColumns() {
         sb.append(");");
         return sb.toString();
     }
-    public String createNewTableSql() {
+
+    String constraint = "FK_StudentsLaptops";
+
+    public String addForeignKey(Class<T> clz) {
+        String laptops = "laptops";
+        String fk = "FK_StudentLaptops";
+        String pk = "studentId";
         StringBuilder sb = new StringBuilder();
-        sb.append("CREATE TABLE ").append(tableName).append(" (");
-        sb.append(columnDefinition(primaryKey));
-        for (var column : columns) {
-            sb.append(", \n");
-            sb.append(columnDefinition(column));
+        for(Field field : clz.getDeclaredFields()) {
+            if(field.isAnnotationPresent(JoinColumn.class)) {
+                sb.append("ALTER TABLE " + laptops);
+                sb.append("\n");
+                sb.append("ADD CONSTRAINT " + fk);
+                sb.append("\n");
+                sb.append("FOREIGN KEY " + field.getName() + " REFERENCES " + "students" + "(" + field.getName() + ");");
+                System.out.println(primaryKey);
+                System.out.println("Success");
+            }
         }
-        sb.append("FOREIGN KEY (" + primaryKey + ") REFERENCES " + tableName + "( " + primaryKey + ")");
-        sb.append(");");
         return sb.toString();
     }
 

@@ -2,27 +2,91 @@ package org.example;
 
 import columns.Laptops;
 import columns.Students;
-import columns.Subjects;
 import dao.Manager;
-import dao.MetaInfo;
+
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 public class Main {
+
+    public static void chill(final List<?> aListWithSomeType){
+        System.out.println(aListWithSomeType.getClass().getGenericSuperclass());
+        System.out.println(((ParameterizedType) aListWithSomeType.getClass()
+                .getGenericSuperclass()).getActualTypeArguments()[0]);
+
+    }
+
     public static void main(String[] args) throws Exception {
         Manager manager = new Manager();
-        manager.withPropertiesFrom("persistence.properties");
+        manager.withPropertiesFrom("org.connection.ConnectionFactory");
 
         // --------DROP ALL TABLE----------
 //        manager.dropTable(Subjects.class);
 //        manager.dropTable(Students.class);
 //        manager.dropTable(Teachers.class);
-        manager.dropTable(Laptops.class);
+//        manager.dropTable(Laptops.class);
         //--------------------
 
 
 //        Students students = new Students();
 //        students.setStudentId(1);
 //        students.setFirstName("First");
+
+//        manager.register(Students.class);
+//        manager.save(students);
+
+//        manager.register(Students.class);
+//        manager.register(Laptops.class);
+//        Students students = new Students();
+//        students.setId(1);
+//        students.setFirstName("Gregor");
+//        students.setLastName("Anderson");
+
+        // !!!!!!!!!!!!!!!!!!!!!!
+        manager.register(Students.class);
+        Students max = new Students();
+        max.setId(1);
+        max.setFirstName("Max");
+        max.setLastName("Henderson");
 //
+        manager.register(Laptops.class);
+        Laptops acer = new Laptops();
+        acer.setId(1);
+        acer.setLaptopName("Acer");
+//
+        Laptops mac = new Laptops();
+        mac.setId(2);
+        mac.setLaptopName("MacBook");
+//
+        max.getLaptopsList().add(acer);
+        max.getLaptopsList().add(mac);
+        acer.setStudentsId(max);
+        mac.setStudentsId(max);
+//
+        manager.save(max);
+        manager.save(acer);
+        manager.save(mac);
+
+        // !!!!!!!!!!!!!!!!!
+//        manager.save(students);
+
+//        Laptops acer = new Laptops();
+//        acer.setId(1);
+//        acer.setLaptopName("acer");
+
+//        manager.save(students);
+//        manager.save(acer);
+//        var update = manager.update(students);
+//        System.out.println(update);
+
+
+//        var update = manager.update(students.getId());
+//        System.out.println(update);
+
+//        var list = manager.findAll(Students.class);
+//        list.forEach(e -> System.out.println(e.getId() + " " + e.getFirstName() + " " + e.getLastName()));
+
+        //
 //        Laptops acer = new Laptops();
 //        acer.setId(1);
 //        acer.setLaptopName("Acer");
@@ -36,14 +100,40 @@ public class Main {
 //        students.getLaptopsList().add(dell);
 
 
-        manager.register(Laptops.class);
-        manager.register(Students.class);
+        // -----------------
+
+//        Laptops acer = new Laptops();
+//        acer.setId(1);
+//        acer.setLaptopName("Acer");
+//
+//        Laptops dell = new Laptops();
+//        dell.setId(2);
+//        dell.setLaptopName("Dell");
+//
+//        Students max = new Students();
+//        max.setId(1);
+//        max.setFirstName("Max");
+//        max.setLastName("Sunderland");
+//        max.getLaptopsList().add(acer);
+//        max.getLaptopsList().add(dell);
+//
+//        acer.setStudents(max);
+//        dell.setStudents(max);
+//
+//        manager.save(acer);
+//        manager.save(dell);
+//        manager.save(max);
+
+
+//        manager.register(Laptops.class);
+//        manager.register(Students.class);
 //        manager.register(Subjects.class);
-        MetaInfo metaInfo = new MetaInfo();
-        metaInfo.setColumns();
+//        MetaInfo metaInfo = new MetaInfo(Laptops.class);
+//        metaInfo.setColumns();
 
-
-
+//        System.out.println("-----------------");
+//        MetaInfo metaInfo1 = new MetaInfo(Students.class);
+//        metaInfo1.setColumns();
 
 
 
@@ -319,4 +409,7 @@ public class Main {
 //        session.getTransaction().commit();
 
     }
+}
+class SpiderMan {
+
 }

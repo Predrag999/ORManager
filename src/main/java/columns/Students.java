@@ -3,17 +3,14 @@ package columns;
 
 import annotations.*;
 
-import javax.persistence.JoinColumn;
 import java.util.ArrayList;
 import java.util.List;
 
-
-//@Table("students")
 @Entity(name = "students")
 @Table("students")
 public class Students {
     @Id
-    @Column(name = "id")
+    @Column(name = "student_Id")
     private int id;
     @Column(name = "firstName")
     private String firstName;
@@ -21,7 +18,7 @@ public class Students {
     private String lastName;
 
     @OneToMany(mappedBy = "students")
-    private List<Laptops> laptopsList = new ArrayList<>();
+    private List<Laptops> laptopsList = new ArrayList<>() {};
 
     public int getId() {
         return id;
@@ -30,6 +27,7 @@ public class Students {
     public void setId(int id) {
         this.id = id;
     }
+
 
     public List<Laptops> getLaptopsList() {
         return laptopsList;
@@ -51,13 +49,6 @@ public class Students {
 //        this.list = list;
 //    }
 
-    public int getStudentId() {
-        return id;
-    }
-
-    public void setStudentId(int studentId) {
-        this.id = studentId;
-    }
 
     public String getFirstName() {
         return firstName;

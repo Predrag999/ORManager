@@ -5,7 +5,6 @@ import annotations.Entity;
 import annotations.Id;
 import annotations.Table;
 
-import java.util.List;
 
 @Entity(name = "subjects")
 @Table("subjects")

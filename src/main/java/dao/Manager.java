@@ -31,7 +31,6 @@ public class Manager implements ORManager {
             if (Arrays.stream(entityClass.getDeclaredAnnotations()).filter(el -> el.annotationType().equals(Entity.class)).findFirst().isEmpty()) {
                 break;
             }
-
             var meta = MetaInfo.of(entityClass);
             String Sql = meta.createTableSql();
             try {
@@ -40,9 +39,38 @@ public class Manager implements ORManager {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
         }
+//        for(Field field : entityClasses.getClass().getDeclaredFields()){
+//            if(field.isAnnotationPresent(OneToMany.class) || field.isAnnotationPresent(ManyToOne.class)){
+//                var meta = MetaInfo.of(field.getClass());
+//                String sql = meta.addForeignKey();
+//                try {
+//                    Statement statement = connection.createStatement();
+//                    statement.execute(sql);
+//                } catch (SQLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        }
     }
+//    public void registerNewTable(Class... entityClasses) { // generate the schema in the DB
+//
+//        for (Class entityClass : entityClasses) {
+//            if (Arrays.stream(entityClass.getDeclaredAnnotations()).filter(el -> el.annotationType().equals(Entity.class)).findFirst().isEmpty()) {
+//                break;
+//            }
+//            var meta = MetaInfo.of(entityClass);
+//            String Sql = meta.createNewTableSql();
+//            try {
+//                Statement statement = connection.createStatement();
+//                statement.execute(Sql);
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//    }
 
     @Override
     public Object save(Object o) {  // insert() or save()
@@ -143,10 +171,12 @@ public class Manager implements ORManager {
             Field primaryKey = meta.primaryKey.field;
             List<MetaInfo.ColumnInfo> fields = meta.columns;
 
-            StringBuilder selectQuery = new StringBuilder("SELECT ");
-            selectQuery.append(primaryKey.getName());
-            fields.forEach((field) -> selectQuery.append(", ").append(field.columnName));
-            selectQuery.append(" FROM ").append(tableName);
+//            StringBuilder selectQuery = new StringBuilder("SELECT ");
+//            selectQuery.append(primaryKey.getName());
+//            fields.forEach((field) -> selectQuery.append(", ").append(field.columnName));
+//            selectQuery.append(" FROM ").append(tableName);
+            StringBuilder selectQuery = new StringBuilder();
+            selectQuery.append("SELECT * FROM ").append(tableName);
 
             try {
                 PreparedStatement preparedStatement = connection.prepareStatement(selectQuery.toString());

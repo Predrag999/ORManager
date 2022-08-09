@@ -7,23 +7,24 @@ import annotations.*;
 public class Laptops {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "laptopid")
     private int id;
 
     @Column(name = "laptopname")
     private String laptopName;
 
 
-    @ManyToOne
-    @JoinColumn(name = "student_id")
-    private Students students;
+    @ManyToOne(name = "studentId")
+    @JoinColumn(name = "studentId")
+    private Students studentsId;
 
-    public Students getStudents() {
-        return students;
+
+        public Students getStudentsId() {
+        return studentsId;
     }
 
-    public void setStudents(Students students) {
-        this.students = students;
+    public void setStudentsId(Students studentsId) {
+        this.studentsId = studentsId;
     }
 
     public int getId() {

@@ -105,7 +105,7 @@ public class ManagerTest {
     @DisplayName("Test5")
     public void test5() throws Exception {
         Students mark = new Students();
-        mark.setStudentId(1);
+        mark.setId(1);
         mark.setFirstName("Mark");
         mark.setLastName("Zuckerberg");
 
@@ -114,7 +114,7 @@ public class ManagerTest {
 
         manager.delete(mark);
 
-        assertEquals(Optional.empty(), manager.findByID(mark.getStudentId(), Students.class));
+        assertEquals(Optional.empty(), manager.findByID(mark.getId(), Students.class));
 
     }
 
@@ -139,9 +139,9 @@ public class ManagerTest {
         Students daniel = new Students();
         Students gerard = new Students();
 
-        max.setStudentId(1000);
-        daniel.setStudentId(1001);
-        gerard.setStudentId(1002);
+        max.setId(1000);
+        daniel.setId(1001);
+        gerard.setId(1002);
 
         max.setFirstName("Max");
         daniel.setFirstName("Daniel");
@@ -160,6 +160,36 @@ public class ManagerTest {
         List<Object> emptyList = new ArrayList<>();
 
         assertEquals(emptyList, manager.findAll(Students.class));
+    }
+
+    @Test
+    @DisplayName("test8")
+    public void test8() throws Exception{
+        Students john = new Students();
+        john.setId(1);
+        john.setFirstName("John");
+        john.setLastName("Sunderland");
+
+        Students gregor = new Students();
+        gregor.setId(2);
+        gregor.setFirstName("Gregor");
+        gregor.setLastName("Anderson");
+
+        manager.register(Students.class);
+        manager.save(john);
+        manager.save(gregor);
+
+        var updateForJohn = manager.update(john);
+        var updateForGregor = manager.update(gregor);
+
+        assertEquals(1,updateForJohn.getId());
+        assertEquals(2,updateForGregor.getId());
+
+    }
+    @Test
+    @DisplayName("test9")
+    public void test9() throws Exception {
+
     }
 
 }
